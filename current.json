@@ -1,0 +1,6 @@
+[
+  { "name": "PSV", "position": 1 },
+  { "name": "Ajax", "position": 2 },
+  { "name": "Feyenoord", "position": 3 }
+  // ... alle 18 clubs op basis van de actuele tussenstand
+]
