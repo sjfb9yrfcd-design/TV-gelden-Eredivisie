@@ -8,11 +8,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const historyData = await historyResponse.json();
         const currentData = await currentResponse.json();
 
-        // Haal de 'Last-Modified' op van het current.json bestand
         const lastModifiedHeader = currentResponse.headers.get('last-modified');
         displayLastUpdated(lastModifiedHeader);
 
-        // Laad en verhoog de bezoekersaantallenteller
         fetchVisitorCount();
 
         calculateAndRender(historyData, currentData);
@@ -20,6 +18,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("Fout bij het laden van de databestanden:", error);
     }
 });
+
+// Functie om afwijkende clubnamen (Teletekst vs Historie) automatisch gelijk te trekken
+function normalizeClubName(name) {
+    if (!name) return "";
+    let clean = name.trim();
+    
+    // Mappings voor eventuele afwijkingen tussen Teletekst en je history.json
+    const mapping = {
+        "FC Twente": "Twente",
+        "Go Ahead Eagles": "Go Ahead",
+        "NAC Breda": "NAC",
+        "Fortuna Sittard": "Fortuna"
+    };
+    
+    return mapping[clean] || clean;
+}
 
 function displayLastUpdated(headerDate) {
     const updateElement = document.getElementById('last-updated');
@@ -37,7 +51,9 @@ function displayLastUpdated(headerDate) {
         };
         updateElement.textContent = date.toLocaleDateString('nl-NL', options);
     } else {
-        updateElement.textContent = "Onbekend";
+        // Fallback als de header ontbreekt (bijv. lokale test)
+        let now = new Date();
+        updateElement.textContent = now.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
     }
 }
 
@@ -46,8 +62,6 @@ async function fetchVisitorCount() {
     if (!counterElement) return;
 
     try {
-        // We gebruiken CounterAPI (verhoogt de teller bij elk uniek laadmoment en geeft de stand terug)
-        // Vervang 'eredivisie-tv-ranking' eventueel door een unieke naam voor jouw project
         const response = await fetch('https://api.counterapi.dev/v1/eredivisie-tv-ranking/bezoekers/up');
         const data = await response.json();
         
@@ -73,11 +87,13 @@ function calculateTVRanking(seasonsList, activeClubs) {
         const weight = index + 1; 
         
         seasonObj.standings.forEach(clubEntry => {
-            if (scores.hasOwnProperty(clubEntry.name)) {
+            let normalizedName = normalizeClubName(clubEntry.name);
+            
+            if (scores.hasOwnProperty(normalizedName)) {
                 let rankPoints = 19 - clubEntry.position; 
                 if (rankPoints < 0) rankPoints = 0;
 
-                scores[clubEntry.name] += rankPoints * weight;
+                scores[normalizedName] += rankPoints * weight;
             }
         });
     });
@@ -99,7 +115,8 @@ function calculateTVRanking(seasonsList, activeClubs) {
 }
 
 function calculateAndRender(history, currentSeasonStandings) {
-    let activeClubs = currentSeasonStandings.map(c => c.name);
+    // Normaliseer ook direct de actieve clubs uit current.json
+    let activeClubs = currentSeasonStandings.map(c => normalizeClubName(c.name));
 
     let startRanking = calculateTVRanking(history, activeClubs);
 
