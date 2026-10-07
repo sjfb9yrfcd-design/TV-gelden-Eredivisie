@@ -14,23 +14,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-function calculateTVRanking(seasonsList) {
+function calculateTVRanking(seasonsList, activeClubs) {
     let scores = {};
 
-    // 10 seizoenen: het oudste seizoen krijgt factor 1, het nieuwste factor 10
-    // (of afhankelijk van hoe jouw historie is opgebouwd, hier gaan we uit van 10 seizoenen in volgorde)
-    seasonsList.forEach((seasonRanking, index) => {
+    // Initialiseer alleen de clubs die DIT seizoen actief in de Eredivisie spelen
+    activeClubs.forEach(club => {
+        scores[club] = 0;
+    });
+
+    // Loop door de historische seizoenen (oud naar nieuw)
+    seasonsList.forEach((seasonObj, index) => {
         const weight = index + 1; // index 0 = oudste (gewicht 1), index 9 = meest recent (gewicht 10)
         
-        seasonRanking.forEach(club => {
-            // Eredivisie puntentelling: plek 1 = 18 punten, plek 18 = 1 punt
-            let rankPoints = 19 - club.position; 
-            if (rankPoints < 0) rankPoints = 0;
+        seasonObj.standings.forEach(clubEntry => {
+            // Tel alleen mee als deze club ook daadwerkelijk in het huidige seizoen in de Eredivisie zit
+            if (scores.hasOwnProperty(clubEntry.name)) {
+                // Eredivisie puntentelling: plek 1 = 18 punten, plek 18 = 1 punt
+                let rankPoints = 19 - clubEntry.position; 
+                if (rankPoints < 0) rankPoints = 0;
 
-            if (!scores[club.name]) {
-                scores[club.name] = 0;
+                scores[clubEntry.name] += rankPoints * weight;
             }
-            scores[club.name] += rankPoints * weight;
         });
     });
 
@@ -50,22 +54,26 @@ function calculateTVRanking(seasonsList) {
 }
 
 function calculateAndRender(history, currentSeasonStandings) {
-    // 1. Bereken TV-ranglijst bij start van het seizoen (op basis van de 10 historische seizoenen)
-    let startRanking = calculateTVRanking(history);
+    // Stap 1: Haal de lijst op van alle clubs die dit seizoen actief zijn in de Eredivisie
+    let activeClubs = currentSeasonStandings.map(c => c.name);
 
-    // 2. Bereken de 'Wat-als' ranglijst: 
-    // Schuif de historie op: laat het alleroudste seizoen vallen, en voeg de huidige tussenstand toe als nieuwste seizoen.
-    let simulatedHistory = [...history.slice(1), currentSeasonStandings];
-    let currentTVRanking = calculateTVRanking(simulatedHistory);
+    // Stap 2: Bereken TV-ranglijst bij start van het seizoen (op basis van de 10 historische seizoenen, gefilterd op actieve clubs)
+    let startRanking = calculateTVRanking(history, activeClubs);
 
-    // Verzamel alle unieke clubs
-    let allClubs = Object.keys(startRanking);
+    // Stap 3: Bereken de 'Wat-als' ranglijst: 
+    // We bouwen een gesimuleerde historie op waarin we het oudste seizoen weglaten, 
+    // en de actuele tussenstand van dit seizoen toevoegen als het meest recente seizoen.
+    let simulatedHistory = [
+        ...history.slice(1), 
+        { season: "current", standings: currentSeasonStandings }
+    ];
+    let currentTVRanking = calculateTVRanking(simulatedHistory, activeClubs);
 
-    // Combineer data voor de tabel
-    let tableData = allClubs.map(club => {
+    // Stap 4: Combineer data voor de tabel op basis van de actieve clubs
+    let tableData = activeClubs.map(club => {
         let startPos = startRanking[club] || 99;
         let currentPos = currentTVRanking[club] || 99;
-        let diff = startPos - currentPos; // positief is stijgen (bijv. start 10, nu 8 = +2 plekken op tv-ranglijst)
+        let diff = startPos - currentPos; // positief is stijgen op tv-ranglijst
 
         return {
             club: club,
