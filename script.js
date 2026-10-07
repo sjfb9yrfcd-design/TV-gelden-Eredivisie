@@ -19,20 +19,38 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 });
 
-// Functie om afwijkende clubnamen (Teletekst vs Historie) automatisch gelijk te trekken
+// Extra robuuste normalisatie: haalt 'FC' weg en trimt alle spaties
 function normalizeClubName(name) {
     if (!name) return "";
     let clean = name.trim();
     
-    // Mappings voor eventuele afwijkingen tussen Teletekst en je history.json
-    const mapping = {
-        "FC Twente": "Twente",
-        "Go Ahead Eagles": "Go Ahead",
-        "NAC Breda": "NAC",
-        "Fortuna Sittard": "Fortuna"
-    };
-    
-    return mapping[clean] || clean;
+    // Zet alles naar kleine letters om vergelijkingen makkelijker te maken
+    let lower = clean.toLowerCase();
+
+    if (lower.includes('twente')) return 'Twente';
+    if (lower.includes('ajax')) return 'Ajax';
+    if (lower.includes('psv')) return 'PSV';
+    if (lower.includes('feyenoord')) return 'Feyenoord';
+    if (lower.includes('az')) return 'AZ';
+    if (lower.includes('utrecht')) return 'Utrecht';
+    if (lower.includes('vitesse')) return 'Vitesse';
+    if (lower.includes('heerenveen')) return 'Heerenveen';
+    if (lower.includes('groningen')) return 'Groningen';
+    if (lower.includes('sparta')) return 'Sparta';
+    if (lower.includes('fortuna')) return 'Fortuna';
+    if (lower.includes('go ahead')) return 'Go Ahead';
+    if (lower.includes('nec')) return 'NEC';
+    if (lower.includes('pec zwolle') || lower.includes('zwolle')) return 'PEC Zwolle';
+    if (lower.includes('rkc')) return 'RKC';
+    if (lower.includes('nac')) return 'NAC';
+    if (lower.includes('heracles')) return 'Heracles';
+    if (lower.includes('almere')) return 'Almere City';
+    if (lower.includes('excelsior')) return 'Excelsior';
+    if (lower.includes('volendam')) return 'Volendam';
+    if (lower.includes('willem ii')) return 'Willem II';
+    if (lower.includes('cambuur')) return 'Cambuur Leeuwarden';
+
+    return clean;
 }
 
 function displayLastUpdated(headerDate) {
@@ -51,7 +69,6 @@ function displayLastUpdated(headerDate) {
         };
         updateElement.textContent = date.toLocaleDateString('nl-NL', options);
     } else {
-        // Fallback als de header ontbreekt (bijv. lokale test)
         let now = new Date();
         updateElement.textContent = now.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
     }
@@ -115,7 +132,6 @@ function calculateTVRanking(seasonsList, activeClubs) {
 }
 
 function calculateAndRender(history, currentSeasonStandings) {
-    // Normaliseer ook direct de actieve clubs uit current.json
     let activeClubs = currentSeasonStandings.map(c => normalizeClubName(c.name));
 
     let startRanking = calculateTVRanking(history, activeClubs);
