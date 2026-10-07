@@ -1,0 +1,35 @@
+name: Update Eredivisie Stand
+
+on:
+  schedule:
+    - cron: '0 21 * * 0' # Elke zondag om 21:00 uur UTC
+  workflow_dispatch: # Maakt handmatig testen via GitHub mogelijk
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Zet Python klaar
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Installeer benodigdheden (bijv.requests/BeautifulSoup als je wilt scrapen)
+        run: |
+          pip install requests beautifulsoup4
+
+      - name: Voer update script uit
+        run: |
+          python update_stand.py
+
+      - name: Commit en push gewijzigde current.json naar GitHub
+        run: |
+          git config --global user.name 'GitHub Actions Bot'
+          git config --global user.email 'actions@github.com'
+          git add current.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Automatische update actuele stand [skip ci]" && git push)
