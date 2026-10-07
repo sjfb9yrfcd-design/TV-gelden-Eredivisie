@@ -1,6 +1,74 @@
 [
-  { "name": "PSV", "position": 1 },
-  { "name": "Ajax", "position": 2 },
-  { "name": "Feyenoord", "position": 3 }
-  // ... alle 18 clubs op basis van de actuele tussenstand
+  {
+    "name": "AZ",
+    "position": 1
+  },
+  {
+    "name": "Feyenoord",
+    "position": 2
+  },
+  {
+    "name": "PSV",
+    "position": 3
+  },
+  {
+    "name": "FC Twente",
+    "position": 4
+  },
+  {
+    "name": "Ajax",
+    "position": 5
+  },
+  {
+    "name": "Fortuna Sit.",
+    "position": 6
+  },
+  {
+    "name": "Excelsior",
+    "position": 7
+  },
+  {
+    "name": "FC Groningen",
+    "position": 8
+  },
+  {
+    "name": "Go Ahead",
+    "position": 9
+  },
+  {
+    "name": "Heerenveen",
+    "position": 10
+  },
+  {
+    "name": "NEC",
+    "position": 11
+  },
+  {
+    "name": "Sparta R'dam",
+    "position": 12
+  },
+  {
+    "name": "Telstar",
+    "position": 13
+  },
+  {
+    "name": "SC Cambuur",
+    "position": 14
+  },
+  {
+    "name": "FC Utrecht",
+    "position": 15
+  },
+  {
+    "name": "PEC Zwolle",
+    "position": 16
+  },
+  {
+    "name": "ADO Den Haag",
+    "position": 17
+  },
+  {
+    "name": "Willem II",
+    "position": 18
+  }
 ]
