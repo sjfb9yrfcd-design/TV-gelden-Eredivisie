@@ -3,83 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eredivisie TV-Ranglijst</title>
+    <title>Eredivisie TV-Gelden Ranglijst</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Eredivisie TV-Ranglijst</h1>
-            <p>Vergelijking tussen de officiële startstand en de prognose op basis van de huidige tussenstand.</p>
+            <h1>Eredivisie TV-Gelden Ranglijst</h1>
+            <p>Live overzicht op basis van de 10-jarencyclus</p>
         </header>
 
         <main>
-            <div class="table-responsive">
-                <table id="tv-ranking-table">
-                    <thead>
-                        <tr>
-                            <th>Club</th>
-                            <th>TV-Ranglijst (Start Seizoen)</th>
-                            <th>TV-Ranglijst (Huidige Stand)</th>
-                            <th>Verschil</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Wordt dynamisch ingevuld door JavaScript -->
-                    </tbody>
-                </table>
-            </div>
+            <table id="tv-ranking-table">
+                <thead>
+                    <tr>
+                        <th>Club</th>
+                        <th>Start Stand</th>
+                        <th>Huidige Stand</th>
+                        <th>Verschil</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Wordt dynamisch gevuld door script.js -->
+                </tbody>
+            </table>
         </main>
-        
+
         <footer>
-            <p><small>Automatisch berekend op basis van de 10-jarencyclus.</small></p>
+            <p><small style="color: #888;">Automatisch berekend op basis van de 10-jarencyclus op <span id="last-updated">Laden...</span> | Aantal bezoekers: <span id="visitor-count">...</span></small></p>
         </footer>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
-<footer>
-            <p><small>Automatisch berekend op basis van de 10-jarencyclus.</small></p>
-            <p><small style="color: #888;">Laatste update: <span id="last-updated">Laden...</span></small></p>
-        </footer>
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eredivisie TV-Ranglijst</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Eredivisie TV-Ranglijst</h1>
-            <p>Vergelijking tussen de officiële startstand en de prognose op basis van de huidige tussenstand.</p>
-        </header>
-
-        <main>
-            <div class="table-responsive">
-                <table id="tv-ranking-table">
-                    <thead>
-                        <tr>
-                            <th>Club</th>
-                            <th>TV-Ranglijst (Start Seizoen)</th>
-                            <th>TV-Ranglijst (Huidige Stand)</th>
-                            <th>Verschil</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Wordt dynamisch ingevuld door JavaScript -->
-                    </tbody>
-                </table>
-            </div>
-        </main>
-        
-        <footer>
-            <p><small>Automatisch berekend op basis van de 10-jarencyclus.</small></p>
-        </footer>
-    </div>
-
-    <script src="script.js"></script>
-
