@@ -17,19 +17,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 function calculateTVRanking(seasonsList, activeClubs) {
     let scores = {};
 
-    // Initialiseer alleen de clubs die DIT seizoen actief in de Eredivisie spelen
     activeClubs.forEach(club => {
         scores[club] = 0;
     });
 
-    // Loop door de historische seizoenen (oud naar nieuw)
     seasonsList.forEach((seasonObj, index) => {
-        const weight = index + 1; // index 0 = oudste (gewicht 1), index 9 = meest recent (gewicht 10)
+        const weight = index + 1; 
         
         seasonObj.standings.forEach(clubEntry => {
-            // Tel alleen mee als deze club ook daadwerkelijk in het huidige seizoen in de Eredivisie zit
             if (scores.hasOwnProperty(clubEntry.name)) {
-                // Eredivisie puntentelling: plek 1 = 18 punten, plek 18 = 1 punt
                 let rankPoints = 19 - clubEntry.position; 
                 if (rankPoints < 0) rankPoints = 0;
 
@@ -38,47 +34,45 @@ function calculateTVRanking(seasonsList, activeClubs) {
         });
     });
 
-    // Zet om naar een sorteerbare array
+    // We retourneren nu zowel de positie als het totale aantal punten
     let sortedRanking = Object.keys(scores).map(club => ({
         name: club,
         score: scores[club]
     })).sort((a, b) => b.score - a.score);
 
-    // Wijs posities toe (1 t/m N)
-    let positions = {};
+    let results = {};
     sortedRanking.forEach((item, index) => {
-        positions[item.name] = index + 1;
+        results[item.name] = {
+            position: index + 1,
+            score: item.score
+        };
     });
 
-    return positions;
+    return results;
 }
 
 function calculateAndRender(history, currentSeasonStandings) {
-    // Stap 1: Haal de lijst op van alle clubs die dit seizoen actief zijn in de Eredivisie
     let activeClubs = currentSeasonStandings.map(c => c.name);
 
-    // Stap 2: Bereken TV-ranglijst bij start van het seizoen (op basis van de 10 historische seizoenen, gefilterd op actieve clubs)
     let startRanking = calculateTVRanking(history, activeClubs);
 
-    // Stap 3: Bereken de 'Wat-als' ranglijst: 
-    // We bouwen een gesimuleerde historie op waarin we het oudste seizoen weglaten, 
-    // en de actuele tussenstand van dit seizoen toevoegen als het meest recente seizoen.
     let simulatedHistory = [
         ...history.slice(1), 
         { season: "current", standings: currentSeasonStandings }
     ];
     let currentTVRanking = calculateTVRanking(simulatedHistory, activeClubs);
 
-    // Stap 4: Combineer data voor de tabel op basis van de actieve clubs
     let tableData = activeClubs.map(club => {
-        let startPos = startRanking[club] || 99;
-        let currentPos = currentTVRanking[club] || 99;
-        let diff = startPos - currentPos; // positief is stijgen op tv-ranglijst
+        let startData = startRanking[club] || { position: 99, score: 0 };
+        let currentData = currentTVRanking[club] || { position: 99, score: 0 };
+        let diff = startData.position - currentData.position;
 
         return {
             club: club,
-            startPos: startPos,
-            currentPos: currentPos,
+            startPos: startData.position,
+            startScore: startData.score,
+            currentPos: currentData.position,
+            currentScore: currentData.score,
             diff: diff
         };
     });
@@ -86,7 +80,6 @@ function calculateAndRender(history, currentSeasonStandings) {
     // Sorteer op basis van de huidige TV-ranglijst positie
     tableData.sort((a, b) => a.currentPos - b.currentPos);
 
-    // Render in HTML
     const tbody = document.querySelector("#tv-ranking-table tbody");
     tbody.innerHTML = "";
 
@@ -103,8 +96,8 @@ function calculateAndRender(history, currentSeasonStandings) {
         let tr = document.createElement("tr");
         tr.innerHTML = `
             <td><strong>${row.club}</strong></td>
-            <td>${row.startPos}</td>
-            <td>${row.currentPos}</td>
+            <td>${row.startPos} <small style="color: #777;">(${row.startScore} pnt)</small></td>
+            <td>${row.currentPos} <small style="color: #777;">(${row.currentScore} pnt)</small></td>
             <td>${diffHtml}</td>
         `;
         tbody.appendChild(tr);
