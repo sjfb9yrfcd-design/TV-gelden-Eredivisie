@@ -69,3 +69,9 @@ footer {
     text-align: center;
     color: #888;
 }
+
+td small {
+    font-size: 0.85em;
+    color: #666;
+    margin-left: 4px;
+}
