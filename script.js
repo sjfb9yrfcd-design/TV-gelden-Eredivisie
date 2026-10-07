@@ -12,6 +12,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const lastModifiedHeader = currentResponse.headers.get('last-modified');
         displayLastUpdated(lastModifiedHeader);
 
+        // Laad en verhoog de bezoekersaantallenteller
+        fetchVisitorCount();
+
         calculateAndRender(historyData, currentData);
     } catch (error) {
         console.error("Fout bij het laden van de databestanden:", error);
@@ -24,7 +27,6 @@ function displayLastUpdated(headerDate) {
 
     if (headerDate) {
         let date = new Date(headerDate);
-        // Formatteer naar Nederlandse datum en tijd
         let options = { 
             day: 'numeric', 
             month: 'long', 
@@ -35,8 +37,28 @@ function displayLastUpdated(headerDate) {
         };
         updateElement.textContent = date.toLocaleDateString('nl-NL', options);
     } else {
-        // Fallback als de header om een of andere reden ontbreekt
         updateElement.textContent = "Onbekend";
+    }
+}
+
+async function fetchVisitorCount() {
+    const counterElement = document.getElementById('visitor-count');
+    if (!counterElement) return;
+
+    try {
+        // We gebruiken CounterAPI (verhoogt de teller bij elk uniek laadmoment en geeft de stand terug)
+        // Vervang 'eredivisie-tv-ranking' eventueel door een unieke naam voor jouw project
+        const response = await fetch('https://api.counterapi.dev/v1/eredivisie-tv-ranking/bezoekers/up');
+        const data = await response.json();
+        
+        if (data && data.count !== undefined) {
+            counterElement.textContent = data.count.toLocaleString('nl-NL');
+        } else {
+            counterElement.textContent = "N.b.";
+        }
+    } catch (e) {
+        console.error("Kon bezoekersaantal niet ophalen:", e);
+        counterElement.textContent = "N.b.";
     }
 }
 
