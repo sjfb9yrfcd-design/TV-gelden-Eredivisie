@@ -8,11 +8,37 @@ document.addEventListener("DOMContentLoaded", async () => {
         const historyData = await historyResponse.json();
         const currentData = await currentResponse.json();
 
+        // Haal de 'Last-Modified' op van het current.json bestand
+        const lastModifiedHeader = currentResponse.headers.get('last-modified');
+        displayLastUpdated(lastModifiedHeader);
+
         calculateAndRender(historyData, currentData);
     } catch (error) {
         console.error("Fout bij het laden van de databestanden:", error);
     }
 });
+
+function displayLastUpdated(headerDate) {
+    const updateElement = document.getElementById('last-updated');
+    if (!updateElement) return;
+
+    if (headerDate) {
+        let date = new Date(headerDate);
+        // Formatteer naar Nederlandse datum en tijd
+        let options = { 
+            day: 'numeric', 
+            month: 'long', 
+            year: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit',
+            timeZone: 'Europe/Amsterdam'
+        };
+        updateElement.textContent = date.toLocaleDateString('nl-NL', options);
+    } else {
+        // Fallback als de header om een of andere reden ontbreekt
+        updateElement.textContent = "Onbekend";
+    }
+}
 
 function calculateTVRanking(seasonsList, activeClubs) {
     let scores = {};
@@ -34,7 +60,6 @@ function calculateTVRanking(seasonsList, activeClubs) {
         });
     });
 
-    // We retourneren nu zowel de positie als het totale aantal punten
     let sortedRanking = Object.keys(scores).map(club => ({
         name: club,
         score: scores[club]
@@ -77,7 +102,6 @@ function calculateAndRender(history, currentSeasonStandings) {
         };
     });
 
-    // Sorteer op basis van de huidige TV-ranglijst positie
     tableData.sort((a, b) => a.currentPos - b.currentPos);
 
     const tbody = document.querySelector("#tv-ranking-table tbody");
