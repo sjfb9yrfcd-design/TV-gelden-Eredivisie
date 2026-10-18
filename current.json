@@ -4,11 +4,11 @@
     "position": 1
   },
   {
-    "name": "PSV",
+    "name": "AZ",
     "position": 2
   },
   {
-    "name": "AZ",
+    "name": "PSV",
     "position": 3
   },
   {
@@ -28,15 +28,15 @@
     "position": 7
   },
   {
-    "name": "Go Ahead",
+    "name": "Heerenveen",
     "position": 8
   },
   {
-    "name": "Excelsior",
+    "name": "Go Ahead",
     "position": 9
   },
   {
-    "name": "Heerenveen",
+    "name": "Excelsior",
     "position": 10
   },
   {
@@ -44,15 +44,15 @@
     "position": 11
   },
   {
-    "name": "SC Cambuur",
+    "name": "Sparta R'dam",
     "position": 12
   },
   {
-    "name": "FC Utrecht",
+    "name": "SC Cambuur",
     "position": 13
   },
   {
-    "name": "Sparta R'dam",
+    "name": "FC Utrecht",
     "position": 14
   },
   {
@@ -60,11 +60,11 @@
     "position": 15
   },
   {
-    "name": "PEC Zwolle",
+    "name": "ADO Den Haag",
     "position": 16
   },
   {
-    "name": "ADO Den Haag",
+    "name": "PEC Zwolle",
     "position": 17
   },
   {
