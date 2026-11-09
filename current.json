@@ -1,14 +1,14 @@
 [
   {
-    "name": "Feyenoord",
+    "name": "PSV",
     "position": 1
   },
   {
-    "name": "Ajax",
+    "name": "Feyenoord",
     "position": 2
   },
   {
-    "name": "PSV",
+    "name": "Ajax",
     "position": 3
   },
   {
@@ -20,39 +20,39 @@
     "position": 5
   },
   {
-    "name": "Fortuna Sit.",
+    "name": "Heerenveen",
     "position": 6
   },
   {
-    "name": "Heerenveen",
+    "name": "Fortuna Sit.",
     "position": 7
   },
   {
-    "name": "FC Groningen",
+    "name": "Go Ahead",
     "position": 8
   },
   {
-    "name": "SC Cambuur",
+    "name": "FC Groningen",
     "position": 9
   },
   {
-    "name": "Go Ahead",
+    "name": "SC Cambuur",
     "position": 10
   },
   {
-    "name": "Sparta R'dam",
+    "name": "NEC",
     "position": 11
   },
   {
-    "name": "FC Utrecht",
+    "name": "Sparta R'dam",
     "position": 12
   },
   {
-    "name": "NEC",
+    "name": "PEC Zwolle",
     "position": 13
   },
   {
-    "name": "PEC Zwolle",
+    "name": "FC Utrecht",
     "position": 14
   },
   {
